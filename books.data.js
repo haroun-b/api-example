@@ -1,4 +1,6 @@
-module.exports = [
+module.exports = {
+  validKeys: [`title`, `author`, `language`, `year`, `publisher`],
+  books: [
   {
     title: `1984`,
     author: `George Orwell`,
@@ -20,4 +22,5 @@ module.exports = [
     year: `2016`,
     publisher: `Canongate Books Ltd`,
   },
-];
+]
+};
