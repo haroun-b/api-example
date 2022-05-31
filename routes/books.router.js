@@ -1,5 +1,5 @@
-const router = require(`express`).router(),
-  { validKeys, books } = require(`./books.data.js`);
+const router = require(`express`).Router(),
+  { validKeys, books } = require(`../books.data.js`);
 
 router.route(`/`)
   .get((req, res) => {

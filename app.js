@@ -3,7 +3,7 @@ const express = require(`express`),
   booksRouter = require(`./routes/books.router.js`),
   addErrorHandler = require(`./error-handler.js`),
   app = express(),
-  port = 3000;
+  port = 8080;
 
 // parses json requests
 app.use(express.json());

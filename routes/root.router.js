@@ -1,4 +1,4 @@
-const router = require(`express`).router();
+const router = require(`express`).Router();
 
 router.get(`/`, (req, res) => {
   res.json({message: `Welcome to my humble API!`});
