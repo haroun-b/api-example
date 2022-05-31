@@ -11,18 +11,21 @@ router.route(`/`)
       invalidKeys = bookKeys.filter(key => !validKeys.includes(key)),
       missingKeys = validKeys.filter(key => !bookKeys.includes(key));
 
-    let errorMsg = ``;
+    let badRequest = {};
 
     if (invalidKeys.length) {
-      errorMsg += `Invalid keys: ${invalidKeys.join(`; `)}.`
+      badRequest.invalidKeys = invalidKeys;
     }
     if (missingKeys.length) {
-      errorMsg += `Missing keys: ${missingKeys.join(`; `)}.`
+      badRequest.missingKeys = missingKeys;
+    }
+    if (Object.keys(badRequest).length) {
+      badRequest.message = `Bad Request!`;
+      return res.status(400).json(badRequest);
     }
 
-    if (errorMsg) {
-      return res.status(400).json({ message: errorMsg });
-    }
+    books.push(book);
+    return res.status(201).json(book);
   });
 
 module.exports = router;
