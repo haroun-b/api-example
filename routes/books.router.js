@@ -28,4 +28,14 @@ router.route(`/`)
     return res.status(201).json(book);
   });
 
+router.get(`/find`, (req, res) => {
+  const validRequestKeys = Object.entries(req.query).filter(([key, value]) => validKeys.includes(key));
+
+  const result = books.filter(book => {
+    return validRequestKeys.every(([key, value]) => book[key].localeCompare(value, `en`, { sensitivity: 'base' }) === 0);
+  });
+
+  return res.status(200).json({ result });
+});
+
 module.exports = router;
