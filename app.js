@@ -1,7 +1,7 @@
 const express = require(`express`),
-  rootRouter = require(`./routes/root.router.js`),
-  booksRouter = require(`./routes/books.router.js`),
-  addErrorHandler = require(`./error-handler.js`),
+  rootRouter = require(`./routes/root.router`),
+  booksRouter = require(`./routes/books.router`),
+  addErrorHandler = require(`./error-handler`),
   app = express(),
   port = 8080;
 

@@ -1,41 +1,48 @@
 const router = require(`express`).Router(),
-  { validKeys, books } = require(`../books.data.js`);
+  mongoose = require(`mongoose`),
+  Book = require(`../models/book.model`);
+
+
+(async () => {
+  try {
+    const connection = await mongoose.connect(`mongodb://127.0.0.1:27017/bibliotheca`);
+
+    console.log(`Connected to ${connection.connections[0].name}...`);
+  } catch (error) {
+    console.error(error);
+  }
+})()
 
 router.route(`/`)
-  .get((req, res) => {
+  .get(async (req, res) => {
+    const books = await Book.find({}, { _id: 0, __v: 0 });
     return res.json({ books });
   })
-  .post((req, res) => {
-    const book = req.body,
-      bookKeys = Object.keys(book),
-      invalidKeys = bookKeys.filter(key => !validKeys.includes(key)),
-      missingKeys = validKeys.filter(key => !bookKeys.includes(key));
+  .post(async (req, res) => {
+    try {
+      const book = req.body;
 
-    let badRequest = {};
+      await Book.create(book);
 
-    if (invalidKeys.length) {
-      badRequest.invalidKeys = invalidKeys;
+      return res.status(201).json(book);
+    } catch ({ message }) {
+      return res.status(400).json({ message });
     }
-    if (missingKeys.length) {
-      badRequest.missingKeys = missingKeys;
-    }
-    if (Object.keys(badRequest).length) {
-      badRequest.message = `Bad Request!`;
-      return res.status(400).json(badRequest);
-    }
-
-    books.push(book);
-    return res.status(201).json(book);
   });
 
-router.get(`/find`, (req, res) => {
-  const validRequestKeys = Object.entries(req.query).filter(([key, value]) => validKeys.includes(key));
+router.get(`/find`, async (req, res) => {
+  try {
+    const searchQuery = req.query;
 
-  const result = books.filter(book => {
-    return validRequestKeys.every(([key, value]) => book[key].localeCompare(value, `en`, { sensitivity: 'base' }) === 0);
-  });
+    for (const param in searchQuery) {
+      searchQuery[param] = new RegExp(searchQuery[param], `i`);
+    }
 
-  return res.status(200).json({ result });
+    const result = await Book.find(searchQuery, { _id: 0, __v: 0 });
+    return res.status(200).json({ result });
+  } catch ({ message }) {
+    return res.status(500).json({ message });
+  }
 });
 
 module.exports = router;
