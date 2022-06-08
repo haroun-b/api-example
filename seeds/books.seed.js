@@ -2,9 +2,12 @@ const { books } = require(`./books.data`),
   mongoose = require(`mongoose`),
   Book = require(`../models/book.model`);
 
+require('dotenv').config();
+
+
 (async () => {
   try {
-    const connection = await mongoose.connect(`mongodb://127.0.0.1:27017/bibliotheca`);
+    const connection = await mongoose.connect(`mongodb+srv://haroun:${process.env.DB_PASSWORD}@cluster0.gnv6zgz.mongodb.net/?retryWrites=true&w=majority`);
 
     console.log(`Connected to ${connection.connections[0].name}...`);
 
